@@ -3,7 +3,8 @@
     <!-- 内部填充色 -->
 	<solid android:color="#91C5CC"/>  
 	<!-- 定义圆角 -->
-    <corners android:radius="10dip"/> 
-   <stroke android:color="#5294B6"  
-    		android:width="2px"/>
+    <corners android:radius="10dip"/>
+    <!-- 定义边框 --> 
+ <!--   <stroke android:color="#5294B6"  
+    		android:width="2px"/> -->
 </shape>

@@ -11,7 +11,6 @@ import com.yj.homebasic.fragment.FragmentManage;
 import com.yj.homebasic.view.sliding.AbBottomTabView;
 
 import android.app.Fragment;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
