@@ -1,8 +1,5 @@
 package com.yj.homebasic.fragment;
 
-
-
-
 import com.yj.homebasic.activity.R;
 
 import android.app.Fragment;
@@ -64,7 +61,7 @@ public class FragmentCollect extends Fragment {
 		    @Override  
 		    public void run() {
 		    	int off =tv_bar.getScrollX() - ll.getScrollX();//¾ø¶ÔÎ»ÖÃ
-		    	Log.e("gege", off + " " + (ll.getMeasuredWidth() - tv_bar.getMeasuredWidth()));
+//		    	Log.e("gege", off + " " + (ll.getMeasuredWidth() - tv_bar.getMeasuredWidth()));
 		        if(isRight){
 		        	off++;
 		        	if(off == (ll.getMeasuredWidth() - tv_bar.getMeasuredWidth())){

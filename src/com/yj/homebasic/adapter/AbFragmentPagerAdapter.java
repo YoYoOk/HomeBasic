@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.view.View;
 
 public class AbFragmentPagerAdapter extends FragmentPagerAdapter {
 
@@ -45,5 +46,29 @@ public class AbFragmentPagerAdapter extends FragmentPagerAdapter {
 		}
 		return fragment;
 
+	}
+
+	@Override
+	public void destroyItem(View arg0, int arg1, Object arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void finishUpdate(View arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Object instantiateItem(View arg0, int arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void startUpdate(View arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }

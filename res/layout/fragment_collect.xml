@@ -35,13 +35,15 @@
         android:id="@+id/ll"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="80dp"
         android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/bar_border"
+        android:padding="1dp">
         <TextView 
             android:id="@+id/tv_bar"
             android:layout_width="80dp"
             android:layout_height="30dp"
-            android:background="@drawable/tab_press"/> 
+            android:background="@drawable/bar_bg"/> 
      </LinearLayout>
 </LinearLayout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#91ACCC">
+    
+    <TextView  
+        android:id="@+id/tv_drug_name"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:background="@drawable/btn_border"  
+        android:text="药品名称:"  
+        android:padding="5dp"
+        android:minHeight="45dp"  
+        android:textSize="18sp" />  
+  
+  	
+    <TextView  
+        android:id="@+id/tv_drug_dosage"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_marginTop="5dp"  
+        android:padding="5dp"
+        android:background="@drawable/btn_border"  
+        android:gravity="top|left"  
+        android:text="用法用量:"  
+        android:minHeight="65dp"  
+        android:textSize="18sp" />  
+    
+    <TextView  
+        android:id="@+id/tv_drug_description"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_marginTop="5dp"  
+        android:background="@drawable/btn_border"  
+        android:gravity="top|left" 
+        android:padding="5dp" 
+        android:text="药品描述:"  
+        android:minHeight="145dp"  
+        android:textSize="18sp" />  
+  
+</LinearLayout>
