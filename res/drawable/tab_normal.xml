@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
     <!-- 内部填充色 -->
-	<solid android:color="#878A8A"/>  
+	<solid android:color="#BEC2C9"/>  
 	<!-- 定义圆角 -->
     <corners android:radius="10dip"/> 
   <!--  <stroke android:color="#5294B6"  

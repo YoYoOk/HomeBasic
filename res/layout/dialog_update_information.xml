@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/tab_press">
+	 <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"  
+        android:layout_margin="10dp">
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tab_normal">
+            <EditText
+                android:id="@+id/et_update_username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:minHeight="35dp"
+                android:background="@android:color/transparent"
+                android:hint="姓名"
+                android:textColorHint="@android:color/white"
+                android:padding="5dp" />
+
+        </LinearLayout>
+        
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.55"
+                android:padding="5dp" >
+               <!--  <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="性别："
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"/> -->
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/rbtn_update_male"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:checked="true"
+                        android:text="男"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"/>
+
+                    <RadioButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="女"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+                </RadioGroup>
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.45"
+                android:background="@drawable/big_border"
+                android:padding="5dp" >
+
+                <EditText
+                    android:id="@+id/et_update_age"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_normal"
+                    android:gravity="center_vertical"
+                    android:hint="年龄"
+                    android:minHeight="35dp"
+                    android:padding="5dp"
+                    android:textColorHint="@android:color/white" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.55"
+                android:background="@drawable/big_border"
+                android:padding="5dp" >
+
+                <EditText
+                    android:id="@+id/et_update_height"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_normal"
+                    android:gravity="center_vertical"
+                    android:hint="身高(cm)"
+                    android:minHeight="35dp"
+                    android:padding="5dp"
+                    android:textColorHint="@android:color/white" />
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.45"
+                android:background="@drawable/big_border"
+                android:padding="5dp" >
+
+                <EditText
+                    android:id="@+id/et_update_weight"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_normal"
+                    android:gravity="center_vertical"
+                    android:hint="体重(kg)"
+                    android:minHeight="35dp"
+                    android:padding="5dp"
+                    android:textColorHint="@android:color/white" />
+            </LinearLayout>
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_update_infor"
+	        android:layout_width="100dp"
+	        android:layout_height="40dp"
+	        android:layout_marginTop="20dp"
+	        android:paddingTop="5dp"
+	        android:paddingBottom="5dp"
+	        android:text="修    改"
+	        android:textSize="20sp"
+	        android:textColor="@android:color/white"
+	        android:background="@drawable/tab_normal"
+	        android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
+</LinearLayout>

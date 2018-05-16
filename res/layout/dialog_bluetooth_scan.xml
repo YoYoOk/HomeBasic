@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/tab_press">
+	 <!-- 弹出历史采集记录列表 -->   
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:padding="5dp">
+        <TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical|left"
+			android:text="蓝牙搜索结果"
+			android:textColor="@android:color/white"
+			android:textSize="25dp" />
+        <!-- 旋转进度条 -->
+	    <ProgressBar 
+	        android:id="@+id/pb_scan"
+	        android:layout_width="32dp"
+	        android:layout_height="32dp"
+	        android:layout_gravity="center_vertical|right"/>
+    </LinearLayout>
+	 
+	 <View 
+	     android:layout_width="match_parent"
+	     android:layout_height="2dp"
+	     android:background="@android:color/white"
+	     android:layout_margin="5dp"/>
+	 
+	 <ListView
+		android:id="@+id/lv_bluetooth_scan_result"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"
+		android:scrollbars="vertical"
+		android:dividerHeight="1px"
+		android:divider="#B8B8B8"
+		android:background="#00000000"/>
+</LinearLayout>

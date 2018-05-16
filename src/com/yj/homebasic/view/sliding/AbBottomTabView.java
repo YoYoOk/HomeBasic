@@ -85,7 +85,7 @@ public class AbBottomTabView extends LinearLayout {
 	private int tabTextSize = 15;
 	
 	/** tab鐨勬枃瀛楅鑹�. */
-	private int tabTextColor = Color.BLACK;
+	private int tabTextColor = Color.WHITE;
 	
 	/** tab鐨勯�変腑鏂囧瓧棰滆壊. */
 	private int tabSelectColor = Color.WHITE;

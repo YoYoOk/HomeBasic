@@ -1,7 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-
     <string name="app_name">普通版</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="unknown_device">unknown_device</string>
+    <!-- 参数设置部分 -->
+    <string name="start_frq_tv">起始频率:</string>
+    <string name="start_frq_unit">kHz</string>
+    <string name="end_frq_tv">终止频率:</string>
+    <string name="end_frq_unit">kHz</string>
+    <string name="frq_interval_tv">步进频率:</string>
+    <string name="frq_interval_unit">Hz</string>
+    <string name="frq_time_tv">步进间隔:</string>
+    <string name="frq_time_unit">*5mS</string>
+    <string name="dianping_tv">直流电平:</string>
+    <string name="dianping_unit">V</string>
+    <string name="enlarge_tv">程控放大:</string>
+    <string name="enlarge_unit">mA</string>
+    <string name="times_tv">扫描次数:</string>
+    <string name="times_init">次</string>
+    <string name="interval_time_tv">多次间隔:</string>
+    <string name="interval_time_unit">*5mS</string>
+    <string name="confirm_set">保存</string>
 </resources>

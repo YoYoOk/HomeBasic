@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#91ACCC">
+    android:background="@drawable/tab_press">
     
     
     <EditText  
         android:id="@+id/et_drug_name"  
         android:layout_width="fill_parent"  
         android:layout_height="wrap_content"  
-        android:background="@drawable/btn_border" 
+        android:background="@drawable/gray_bg" 
         android:padding="5dp" 
         android:hint="药品名称"  
         android:minHeight="45dp"  
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"  
         android:layout_marginTop="5dp"
         android:padding="5dp"  
-        android:background="@drawable/btn_border"  
+        android:background="@drawable/gray_bg"  
         android:gravity="top|left"  
         android:hint="用法用量"  
         android:minHeight="65dp"  
@@ -35,7 +35,7 @@
         android:layout_width="fill_parent"  
         android:layout_height="wrap_content"  
         android:layout_marginTop="5dp"  
-        android:background="@drawable/btn_border"  
+        android:background="@drawable/gray_bg"  
         android:gravity="top|left"  
         android:padding="5dp"
         android:hint="药品描述"  
@@ -49,7 +49,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/btn_border"  
+        android:background="@drawable/gray_bg"  
         android:text="添加" 
         android:textSize="20sp"/>  
 
