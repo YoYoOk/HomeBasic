@@ -24,8 +24,9 @@
 	<uses-permission android:name="android.permission.READ_SMS" />  
 	<uses-permission android:name="android.permission.GET_TASKS" />    
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
-<!-- android:name="com.yj.homebasic.exception.CrashApplication" --> 
+
     <application
+ 		android:name="com.yj.homebasic.exception.CrashApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -42,6 +43,8 @@
         <activity android:name=".RegisterActivity"></activity>
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".InformationSettingActivity"></activity>
+        <activity android:name=".DetectionActivity"></activity>
+        <activity android:name=".HistoryRecordActivity"></activity>
         <activity android:name=".ParamsSettingActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged"></activity>
         <activity    

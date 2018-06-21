@@ -56,7 +56,7 @@ public class RegisterActivity extends Activity implements OnClickListener{
 		initWidget();
 		ActivityController.addActivity(this);
 		db = MainActivity.dbHelper.getWritableDatabase();
-		sp = getSharedPreferences("userInfo", Context.MODE_WORLD_READABLE);
+		sp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 		//×¢²áÊÂ¼þ
 		btn_request_code.setOnClickListener(this);
 		btn_commit.setOnClickListener(this);

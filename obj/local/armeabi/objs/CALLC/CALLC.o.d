@@ -4,7 +4,7 @@ obj/local/armeabi/objs/CALLC/CALLC.o: jni/CALLC.cpp \
  G:/download/android-sdk/android-ndk-r10e/platforms/android-19/arch-arm/usr/include/sys/cdefs_elf.h \
  G:/download/android-sdk/android-ndk-r10e/platforms/android-19/arch-arm/usr/include/android/api-level.h \
  G:/download/android-sdk/android-ndk-r10e/platforms/android-19/arch-arm/usr/include/android/log.h \
- jni/com_yj_homebasic_fragment_FragmentCollect.h jni/myfilter.h \
+ jni/com_yj_homebasic_utils_JniCall.h jni/myfilter.h \
  G:/download/android-sdk/android-ndk-r10e/platforms/android-19/arch-arm/usr/include/stdlib.h \
  G:/download/android-sdk/android-ndk-r10e/platforms/android-19/arch-arm/usr/include/string.h \
  G:/download/android-sdk/android-ndk-r10e/platforms/android-19/arch-arm/usr/include/malloc.h \
@@ -35,7 +35,7 @@ G:/download/android-sdk/android-ndk-r10e/platforms/android-19/arch-arm/usr/inclu
 
 G:/download/android-sdk/android-ndk-r10e/platforms/android-19/arch-arm/usr/include/android/log.h:
 
-jni/com_yj_homebasic_fragment_FragmentCollect.h:
+jni/com_yj_homebasic_utils_JniCall.h:
 
 jni/myfilter.h:
 

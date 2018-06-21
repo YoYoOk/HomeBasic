@@ -34,7 +34,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 		getActionBar().hide();//隐藏actionbar
 		initWidget();
 		ActivityController.addActivity(this);
-		sp = getSharedPreferences("userInfo", Context.MODE_WORLD_READABLE);
+		sp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 		prepareData();
 		MainActivity.dbHelper = new MyDatabaseHelper(this, "HomeBasic.db", null, 4);
 		MainActivity.dbHelper.getWritableDatabase();//在调用这个方法的时候，，会调用重写的onCreate方法  即在此处写创建表的方法

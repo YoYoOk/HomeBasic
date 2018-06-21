@@ -14,6 +14,7 @@ import com.yj.homebasic.activity.R;
 import com.yj.homebasic.bluetooth.BluetoothLeService;
 import com.yj.homebasic.domain.MyPointF;
 import com.yj.homebasic.utils.ConvertUtils;
+import com.yj.homebasic.utils.JniCall;
 import com.yj.homebasic.utils.SaveActionUtils;
 
 import android.app.AlertDialog;
@@ -23,15 +24,12 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -49,7 +47,7 @@ import android.widget.Toast;
 
 public class FragmentCollect extends Fragment implements OnClickListener{
 	private static final long CONNECT_PRRIOD = 8000;//10s后停止如果还没有连接就停止连接
-//	private isHasTemp = true;
+	private boolean isHasTemp = true;
 	private ImageButton btn_connect;//蓝牙连接按钮
 	private Button btn_start;//开始采集按钮
 	private TextView tv_bar;//条形棒
@@ -84,11 +82,13 @@ public class FragmentCollect extends Fragment implements OnClickListener{
 	private List<Byte> listByte;
 	private int iCount = 0;// 判断当前扫描第几次的数据到来
 	private int times_point = 10;//系统屏幕大概亮多少次的时候暗屏默认是3次的时候暗屏
-	private String title_result = "凝血曲线";
+//	private String title_result = "凝血曲线";
 	// 画最终结果的一些定义
 	private float maxValue;//最大值
 	private Date currentDate, beforeDate;
 	String tempStr = "";// 测试用
+	private String cacheStr;
+	private boolean isCache;
 	private int detectId;//点击开始检测之时便存储入库  返回ID  等到检测完毕 更新当前检测的结果
 	private int pointCount;//一次多少个点
 	private int times = 0;//默认是10次  
@@ -100,15 +100,11 @@ public class FragmentCollect extends Fragment implements OnClickListener{
 	private File excel_Source_File, excel_Result_File;// excel文件保存原始数据, 保存结果数据, 保存原始数据滤波之后的数据
 	private MyPointF pointf;//时间---值 
 	private SharedPreferences sp;
+	private boolean isOpenTest;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setHasOptionsMenu(true);//设置菜单栏为true
-	}
-	
-	@Override
-	public void onStart() {
-		super.onStart();
 		receiver = new UpdateBroadcastReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("com.yj.broadcast.UPDATEADDRESS");
@@ -120,13 +116,13 @@ public class FragmentCollect extends Fragment implements OnClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_collect, null);
 		initWidget(view);
-		sp = getActivity().getSharedPreferences("userInfo", Context.MODE_WORLD_READABLE);////查询是否有默认的蓝牙  去SharedPreference
+		sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);////查询是否有默认的蓝牙  去SharedPreference
 		mDeviceAddress = sp.getString("defaultAddress", "00:15:83:00:80:FB");
 		sendString = sp.getString("defaultParams", "861101011027e02e3202800200020000050068");
 		sendData_real = ConvertUtils.hexStringToBytes(sendString);//0次
 		times = (sendData_real[15] & 0xff) * 256 + (sendData_real[14] & 0xff);
-		Toast.makeText(getActivity(),times + "", Toast.LENGTH_SHORT).show();
-		Log.e("#####", ConvertUtils.bytesToHexString(sendData_real));
+//		Log.e("#####",times + "");
+//		Log.e("#####", ConvertUtils.bytesToHexString(sendData_real));
 		handler = new MyHandler();//自定义的消息队列  为了画图
 		drawlineInit();
 		getActivity().registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());//注册监听蓝牙一些服务的广播
@@ -178,17 +174,18 @@ public class FragmentCollect extends Fragment implements OnClickListener{
 			break;
 		case R.id.btn_connect:
 			if(!mConnectedService){
+				mBluetoothLeService.disconnect();
 				mBluetoothLeService.connect(mDeviceAddress);
 				btn_connect.setBackgroundResource(R.drawable.bluetooth_connecting);
 				mHandler = new Handler();
-				mHandler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						if(!mConnectedService){
-							mBluetoothLeService.disconnect();
-						}
-					}
-				}, CONNECT_PRRIOD);//如果等待5s之后还是没有连接 则先断开
+//				mHandler.postDelayed(new Runnable() {
+//					@Override
+//					public void run() {
+//						if(!mConnectedService){
+//							mBluetoothLeService.disconnect();
+//						}
+//					}
+//				}, CONNECT_PRRIOD);//如果等待5s之后还是没有连接 则先断开
 			}else{
 				mBluetoothLeService.disconnect();
 			}
@@ -198,17 +195,17 @@ public class FragmentCollect extends Fragment implements OnClickListener{
 		}
 	}
 	private void saveRecord(){//保存采集记录
-		SQLiteDatabase db = MainActivity.dbHelper.getWritableDatabase();
-		ContentValues values = new ContentValues();
-		values.put("name", sp.getString("phone", "15922747849"));
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		SQLiteDatabase db = MainActivity.dbHelper.getWritableDatabase();
+//		ContentValues values = new ContentValues();
+//		values.put("name", sp.getString("phone", "15922747849"));
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH_mm_ss");
 		detectionDateStr = format.format(new Date());
-		values.put("createTime", detectionDateStr);
-		db.insert("record", null, values);
-		Cursor cursor = db.rawQuery("select last_insert_rowid() from record", null);
-		if(cursor.moveToFirst()){
-			detectId = cursor.getInt(0);//是为了最后结果求出来之后 修改结果 现在的结果是为空//获取新插入数据的id  
-		}
+//		values.put("createTime", detectionDateStr);
+//		db.insert("record", null, values);
+//		Cursor cursor = db.rawQuery("select last_insert_rowid() from record", null);
+//		if(cursor.moveToFirst()){
+//			detectId = cursor.getInt(0);//是为了最后结果求出来之后 修改结果 现在的结果是为空//获取新插入数据的id  
+//		}
 	}
 	
 	//发送消息控制 抽取代码  第一个参数发送是否是开始采集命令，，，第二个参数是否是再次发送采集数据
@@ -279,9 +276,9 @@ public class FragmentCollect extends Fragment implements OnClickListener{
 		fileName = detectionDateStr + "_Source" + ".csv";
 //			excelPath = SaveActionUtils.getExcelDir() + File.separator + filename;
 		// 当前路径/mnt/sdcart/Excel/Data/当前时间.xls
-		excel_Source_File = new File(SaveActionUtils.getExcelDir() + File.separator + fileName);// 得到当前这个文件=
+		excel_Source_File = new File(SaveActionUtils.getExcelDir() + File.separator + "Home" + File.separator + fileName);// 得到当前这个文件=
 		fileName = detectionDateStr + "_Result" + ".csv";
-		excel_Result_File = new File(SaveActionUtils.getExcelDir() + File.separator + fileName);
+		excel_Result_File = new File(SaveActionUtils.getExcelDir() + File.separator + "Home" + File.separator + fileName);
 	}
 	public void drawlineInit(){
 		pointf = new MyPointF();
@@ -331,18 +328,23 @@ public class FragmentCollect extends Fragment implements OnClickListener{
             getActivity().invalidateOptionsMenu();//刷新当前的菜单
 			//连接断开的同时 关闭保持屏幕常亮
             btn_connect.setBackground(getResources().getDrawable(R.drawable.bluetooth_normal));
+            animation.cancel();
         } 
         //发现有可支持的服务
         else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
         	//写数据的服务和characteristic
         	mnotyGattService = mBluetoothLeService.getSupportedGattServices(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
-            characteristic = mnotyGattService.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
-            //读数据的服务和characteristic
-            readMnotyGattService = mBluetoothLeService.getSupportedGattServices(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
-            readCharacteristic = readMnotyGattService.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
-            //只有发现服务了 ，，我才当你是完全连接成功了
-            mConnectedService = true;
-            btn_connect.setBackground(getResources().getDrawable(R.drawable.bluetooth_connect));
+        	if(mnotyGattService != null){
+	            characteristic = mnotyGattService.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
+	            //读数据的服务和characteristic
+	            readMnotyGattService = mBluetoothLeService.getSupportedGattServices(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
+	            readCharacteristic = readMnotyGattService.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));
+	            //只有发现服务了 ，，我才当你是完全连接成功了
+	            mConnectedService = true;
+	            btn_connect.setBackground(getResources().getDrawable(R.drawable.bluetooth_connect));
+            }else{
+            	mBluetoothLeService.disconnect();
+            }
         } 
         //显示数据
         else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
@@ -353,27 +355,49 @@ public class FragmentCollect extends Fragment implements OnClickListener{
         		}
             	byte[] data = intent.getByteArrayExtra(BluetoothLeService.EXTRA_DATA);
             	//有数据来了  短路逻辑  若包含就去判断包含的这个是不是最后的
-            	tempStr = ConvertUtils.bytesToHexString(data);
+            	cacheStr = ConvertUtils.bytesToHexString(data);
+            	if(isCache){//有缓存的话 
+            		tempStr += cacheStr;
+            		if(!(tempStr.length() % 2 == 0)){
+            			isCache = true;
+            			return;
+            		}
+            	}else{//没有缓存
+            		if(!(cacheStr.length() % 2 == 0)){
+            			isCache = true;
+            			tempStr += cacheStr;
+            			return;
+            		}else{
+            			isCache = false;
+            			tempStr = cacheStr;
+            		}
+            	}
             	if(!tempStr.contains("FF01")){//不管是2个字节还是4个字节  应该说是不管是多少字节的数据
-            		for(int i = 0; i < data.length; i++){
+        			for(int i = 0; i < data.length; i++){
             			listByte.add(data[i]);
             		}
+        			tempStr = "";
+        			return;
             	}else{//包含 ff01--还得判断此ff01是不是结尾的那个ff01//判断此ff01是不是真的结尾的那个ff01 
-            		Log.e("length", tempStr + "--" + data.length);
+//            		Log.e("length", tempStr + "--" + data.length);
             		if(tempStr.indexOf("FF01") % 2 != 0){
-            			Log.d("######", "#######" + tempStr + "#######"+listByte.size());
             			for(int i = 0; i < data.length; i++){
                 			listByte.add(data[i]);
                 		}
+            			tempStr = "";
+            			return;
             		}else{
-	            		byte[] tempByte = ConvertUtils.hexStringToBytes(tempStr.substring(0, tempStr.indexOf("FF01")));
+            			byte[] tempByte = ConvertUtils.hexStringToBytes(tempStr.substring(0, tempStr.indexOf("FF01")));
+            			//判断是不是以ff01结尾的 若是的话 说明后面没有数据了 再添加了
 	            		//极有可能 tempByte为空  因为是以ff01起头的  ---20171121 报错了很多次 脑子呆笨没有发现
 	            		if(tempByte != null){
 		            		for(int i = 0; i < tempByte.length; i++){
 		            			listByte.add(tempByte[i]);
 		            		}
+		            		Log.e("#####", "添加FF01之前的");
 	            		}
-	//            		//？？？如何判断到底ff01是最后还是不是最后
+	//            		//如何判断到底ff01是最后还是不是最后
+	            		Log.e("size + pointCount", listByte.size() + "---" + pointCount);
 	            		if(listByte.size() < (pointCount*2)){//说明数据中包含了 ff01
 	            			tempByte = ConvertUtils.hexStringToBytes("FF01");
 	            			Log.d("######", "#######"+listByte.size());
@@ -381,15 +405,17 @@ public class FragmentCollect extends Fragment implements OnClickListener{
 		            			listByte.add(tempByte[i]);
 		            		}
 	            		}else{
+	            			Log.d("######goule", "#######"+listByte.size());
 	            			processBuffer();
+	            			return;
 	            		}
-	            		//判断是不是以ff01结尾的 若是的话 说明后面没有数据了 再添加了
 	            		if(!tempStr.endsWith("FF01")){
 	            			tempByte = ConvertUtils.hexStringToBytes(tempStr.substring(tempStr.indexOf("FF01") + 4));
 	            			for(int i = 0; i < tempByte.length; i++){
 	                			listByte.add(tempByte[i]);
 	                		}
-	            		}//此处仍然是有漏洞的，，，因为有可能接收到的数据并不是偶数  怎么破？----于20171121
+	            		}//TODO 此处仍然是有漏洞的，，，因为有可能接收到的数据并不是偶数  怎么破？----于20171121
+	            		tempStr = "";
             		}
             	}
             }
@@ -399,7 +425,16 @@ public class FragmentCollect extends Fragment implements OnClickListener{
     public void processBuffer() {
 		// 已经来了一次扫描的数据了// 说明一次扫描正常结束 现在只考虑正常的情况下	//每次给yList添加数据之前都清空一次
 		yList.removeAll(yList);
-		yListTemp.removeAll(yListTemp);
+//		yListTemp.removeAll(yListTemp);
+		Log.e("#####1", listByte.size() + "");
+		if(isHasTemp){//要移除最后两个字节
+			int tempSize = listByte.size();
+			if(tempSize != 0){
+				listByte.remove(tempSize - 1);
+				listByte.remove(tempSize - 2);
+			}
+		}
+//		Log.e("#####2", listByte.size() + "");
 //			source = new double[listByte.size()/2];//每次都创建太消耗内存了   解决方案在发送的时候根据x轴的数据长度创建数组
 		for (int i = 0, j = 0; i < listByte.size() - 1; i = i + 2, j++) {
 //				yList.add((listByte.get(i) & 0xff) * 256 + (listByte.get(i + 1) & 0xff));//此处在添加滤波之后修改
@@ -426,7 +461,7 @@ public class FragmentCollect extends Fragment implements OnClickListener{
  				interval_time = interval_time / 1000;
  				pointf.x = interval_time;
  				// 一定要在求两次时间之后，不然会影响凝血曲线时间的判断//画图之前计算最值之前先进行滤波处理//输入必须是double类型？
- 				source = process_Data(source);//去对数据简单滤波
+ 				source = new JniCall().process_Data(source);//去对数据简单滤波
  				for(int i = 0; i < source.length; i++){
  					yList.add(source[i]);
  				}//yList和yListFilter中存储的都是滤波之后的数据，，yList是去画曲线，yListFilter是去保存
@@ -494,6 +529,27 @@ public class FragmentCollect extends Fragment implements OnClickListener{
     }	
     
     @Override
+    public void onResume() {
+    	if(isOpenTest){
+    		Log.e("#####", "onResume");
+    		isOpenTest = false;
+    		getActivity().registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());//注册监听蓝牙一些服务的广播
+    	}
+    	super.onResume();
+    }
+    
+    @Override
+    public void onPause() {
+    	isOpenTest = ((MainActivity)getActivity()).isOpenTest();
+    	if(isOpenTest){
+    		mBluetoothLeService.disconnect();
+    		getActivity().unregisterReceiver(mGattUpdateReceiver);//取消注册广播
+    		Log.e("#####", "onPause");
+    	}
+    	super.onPause();
+    }
+    
+    @Override
     public void onDestroy() {
     	super.onDestroy();
     	getActivity().unbindService(mServiceConnection);
@@ -521,11 +577,5 @@ public class FragmentCollect extends Fragment implements OnClickListener{
 		}
     }
     
-    //Start    Java的JNI技术
-  	static{
-  		System.loadLibrary("CALLC");
-  	}
-  	public native double[] process_Data(double[] source);//本地方法 对数据滤波处理的算法
-  	//End      Java的JNI技术
     
 }

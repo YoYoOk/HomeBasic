@@ -1,6 +1,6 @@
 #include <jni.h>
 #include <android/log.h>
-#include <com_yj_homebasic_fragment_FragmentCollect.h>
+#include <com_yj_homebasic_utils_JniCall.h>
 
 extern "C"
 {
@@ -14,7 +14,7 @@ extern "C"
 /*
  * 低通滤波器实现 调用c程序
  */
-JNIEXPORT jdoubleArray JNICALL Java_com_yj_homebasic_fragment_FragmentCollect_process_1Data
+JNIEXPORT jdoubleArray JNICALL Java_com_yj_homebasic_utils_JniCall_process_1Data
   (JNIEnv *env, jobject obj, jdoubleArray source){
 	jint length = env->GetArrayLength(source);//获取数组的长度
 	jdouble *source_arr = env->GetDoubleArrayElements(source, 0);//获取数组指针

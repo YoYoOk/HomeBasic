@@ -5,6 +5,8 @@ package com.yj.homebasic.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.yj.homebasic.activity.DetectionActivity;
+import com.yj.homebasic.activity.HistoryRecordActivity;
 import com.yj.homebasic.activity.MainActivity;
 import com.yj.homebasic.activity.ParamsSettingActivity;
 import com.yj.homebasic.activity.R;
@@ -20,7 +22,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -42,7 +43,8 @@ import android.widget.Toast;
 public class FragmentMine extends Fragment implements OnClickListener, OnItemClickListener{
 	private static final int REQUEST_ENABLE_BT = 1;//选择是否打开蓝牙对话框
 	private TextView tv_username, tv_password, tv_age, tv_gender, tv_height, tv_weight, tv_default_address;
-	private Button btn_update_password_dialog, btn_search_dialog, btn_update_params, btn_update_information_dialog;
+	private Button btn_update_password_dialog, btn_search_dialog, btn_update_params, btn_update_information_dialog,
+						btn_test, btn_history;
 	private SharedPreferences sp;
 	private UpdatePasswordDialog updatePasswordDialog;
 	private UpdateInformationDialog informationDialog;
@@ -54,6 +56,7 @@ public class FragmentMine extends Fragment implements OnClickListener, OnItemCli
 	private static final long SCAN_PRRIOD = 10000;//10s后停止扫描
 	private int userId;
 	private SQLiteDatabase db;
+	private boolean isOpenTest = false;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,7 +66,7 @@ public class FragmentMine extends Fragment implements OnClickListener, OnItemCli
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_mine, null);
-		sp = this.getActivity().getSharedPreferences("userInfo", Context.MODE_WORLD_READABLE);
+		sp = this.getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 		initWidget(view);
 		prepareData();
 		db = MainActivity.dbHelper.getWritableDatabase();
@@ -71,6 +74,8 @@ public class FragmentMine extends Fragment implements OnClickListener, OnItemCli
 		btn_search_dialog.setOnClickListener(this);
 		btn_update_params.setOnClickListener(this);
 		btn_update_information_dialog.setOnClickListener(this);
+		btn_test.setOnClickListener(this);
+		btn_history.setOnClickListener(this);
 		return view;
 	}
 	
@@ -86,6 +91,8 @@ public class FragmentMine extends Fragment implements OnClickListener, OnItemCli
 		btn_search_dialog = (Button)view.findViewById(R.id.btn_search_dialog);
 		btn_update_params = (Button)view.findViewById(R.id.btn_update_params);
 		btn_update_information_dialog = (Button)view.findViewById(R.id.btn_update_information_dialog);
+		btn_test = (Button)view.findViewById(R.id.btn_test);
+		btn_history = (Button)view.findViewById(R.id.btn_history);
 	}
 	
 	private void prepareData(){
@@ -110,6 +117,12 @@ public class FragmentMine extends Fragment implements OnClickListener, OnItemCli
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);//从主活动获取数据的方式之一
 		
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		isOpenTest = false;
 	}
 	
 	@Override
@@ -200,7 +213,15 @@ public class FragmentMine extends Fragment implements OnClickListener, OnItemCli
 			Intent intent = new Intent(getActivity(), ParamsSettingActivity.class);
 			startActivity(intent);
 			break;
-		
+		case R.id.btn_test:
+			isOpenTest = true;
+			Intent detectIntent = new Intent(getActivity(), DetectionActivity.class);
+			startActivity(detectIntent);
+			break;
+		case R.id.btn_history:
+			Intent historyIntent = new Intent(getActivity(), HistoryRecordActivity.class);
+			startActivity(historyIntent);
+			break;
 		default:
 			break;
 		}
@@ -345,4 +366,7 @@ public class FragmentMine extends Fragment implements OnClickListener, OnItemCli
         TextView deviceName;
         TextView deviceAddress;
     }
+	public boolean isOpenTest() {
+		return isOpenTest;
+	}
 }

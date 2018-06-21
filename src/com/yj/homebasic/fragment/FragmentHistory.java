@@ -7,8 +7,6 @@ import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart.Type;
 import org.achartengine.chart.PointStyle;
-import org.achartengine.model.CategorySeries;
-import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.BasicStroke;
@@ -128,7 +126,7 @@ public class FragmentHistory extends Fragment {
 		}
 		// 3
 		dataset_result.addSeries(0, xyseries_result);
-		datarenderer_result.setColor(Color.GREEN);
+		datarenderer_result.setColor(Color.WHITE);
 		datarenderer_result.setChartValuesTextSize(25);
 		datarenderer_result.setLineWidth(3);
 		datarenderer_result.setPointStyle(PointStyle.CIRCLE);
@@ -154,7 +152,7 @@ public class FragmentHistory extends Fragment {
 		datarenderer_up.setStroke(BasicStroke.DASHED);
 		datarenderer_up.setChartValuesTextAlign(Align.CENTER);
 		datarenderer_down = new XYSeriesRenderer();
-		datarenderer_up.setColor(Color.RED);
+		datarenderer_up.setColor(Color.parseColor("#79DEDB"));
 		datarenderer_down = datarenderer_up;
 		renderer_result.addSeriesRenderer(datarenderer_up);
 		renderer_result.addSeriesRenderer(datarenderer_down);
@@ -205,7 +203,7 @@ public class FragmentHistory extends Fragment {
 		}
 		// 3
 		dataset_drug.addSeries(0, xyseries_drug);
-		datarenderer_drug.setColor(Color.GREEN);
+		datarenderer_drug.setColor(Color.parseColor("#8FB2F6"));
 		// 4
 		renderer_drug.addSeriesRenderer(datarenderer_drug);
 		// 5
@@ -226,14 +224,14 @@ public class FragmentHistory extends Fragment {
 		tempRender.setDisplayChartValues(true);
 		tempRender.setColor(Color.parseColor("#4690E6"));
 		renderer_drug.addSeriesRenderer(tempRender);
-		XYSeries tempSeries1 = new XYSeries("∞¢Àæ∆•¡÷≥¶»‹∆¨");
+		XYSeries tempSeries1 = new XYSeries("#6FC5F5");
 		tempSeries1.add(1, 2);
 		tempSeries1.add(3, 1);
 		tempSeries1.add(5, 2);
 		dataset_drug.addSeries(2, tempSeries1);
 		XYSeriesRenderer tempRender1 = new XYSeriesRenderer();
 		tempRender1.setDisplayChartValues(true);
-		tempRender1.setColor(Color.BLUE);
+		tempRender1.setColor(Color.parseColor("#79DEDB"));
 		renderer_drug.addSeriesRenderer(tempRender1);
 	}
 	@Override

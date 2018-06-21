@@ -37,6 +37,7 @@ public class MainActivity extends FragmentActivity {
 	//蓝牙相关定义
 	public static BluetoothAdapter mBluetoothAdapter;
 	public static BluetoothManager bluetoothManager;
+	private FragmentMine fragmentMine;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,7 +56,7 @@ public class MainActivity extends FragmentActivity {
 			return;
 		}
 		mBluetoothAdapter = bluetoothManager.getAdapter();//蓝牙
-		sp = getSharedPreferences("userInfo", Context.MODE_WORLD_READABLE);
+		sp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 		userId = sp.getInt("userId", 1);
 		mBottomTabView = (AbBottomTabView) findViewById(R.id.mBottomTabView);
 		mBottomTabView.getViewPager().setOffscreenPageLimit(5);
@@ -63,7 +64,7 @@ public class MainActivity extends FragmentActivity {
 		FragmentCollect fragmentCollect = new FragmentCollect();
 		FragmentHistory fragmentHistory = new FragmentHistory();
 		FragmentManage fragmentManage = new FragmentManage();
-		FragmentMine fragmentMine = new FragmentMine();
+		fragmentMine = new FragmentMine();
 		List<Fragment> mFragments = new ArrayList<Fragment>();
 		mFragments.add(fragmentCollect);
 		mFragments.add(fragmentManage);
@@ -105,6 +106,7 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
 	}
 	
 	
@@ -115,5 +117,8 @@ public class MainActivity extends FragmentActivity {
 			break;
 		}
 		super.onActivityResult(requestCode, resultCode, intent);
+	}
+	public boolean isOpenTest() {
+		return fragmentMine.isOpenTest();
 	}
 }

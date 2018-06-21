@@ -1,5 +1,6 @@
 package com.yj.homebasic.fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,6 +32,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -46,10 +49,10 @@ public class FragmentManage extends Fragment implements OnClickListener{
 	private List<Drug> drugList;
 	private List<String> drugNameList;
 	private List<String> drugRecordList;
-	private List<Integer> drugCountList;
+	private List<Double> drugCountList;
 	private DrugListAdapter drugListAdapter;
 	private ArrayAdapter<String> drugNameAdapter, drugRecordAdapter;
-	private ArrayAdapter<Integer> drugCountAdapter;
+	private ArrayAdapter<Double> drugCountAdapter;
 	private int longClickPosition, selectedDrugNamePositon, selectedDrugCountPosition;//长按列表点击的位置
 	private Dialog longClickdialog;//长按删除的dialog
 	private AddDrugDialog addDrugDialog;
@@ -110,23 +113,30 @@ public class FragmentManage extends Fragment implements OnClickListener{
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				//长按点击事件
-				int[] location = new int[2];
-				// 获取当前view在屏幕中的绝对位置
-				// ,location[0]表示view的x坐标值,location[1]表示view的坐标值
-				view.getLocationOnScreen(location);
-				longClickPosition = position;
-				DisplayMetrics displayMetrics = new DisplayMetrics();
-				Display display = getActivity().getWindowManager().getDefaultDisplay();
-				display.getMetrics(displayMetrics);
-				WindowManager.LayoutParams params = longClickdialog.getWindow().getAttributes();
-				params.gravity = Gravity.BOTTOM;
-//				params.y =display.getHeight() -  location[1];//getHeight已废弃
-				Point size = new Point();
-				display.getSize(size);
-				params.y = size.y - location[1];
-				longClickdialog.getWindow().setAttributes(params);
-				longClickdialog.setCanceledOnTouchOutside(true);
-				longClickdialog.show();
+//				int[] location = new int[2];
+//				// 获取当前view在屏幕中的绝对位置
+//				// ,location[0]表示view的x坐标值,location[1]表示view的坐标值
+//				view.getLocationOnScreen(location);
+//				longClickPosition = position;
+//				DisplayMetrics displayMetrics = new DisplayMetrics();
+//				Display display = getActivity().getWindowManager().getDefaultDisplay();
+//				display.getMetrics(displayMetrics);
+//				WindowManager.LayoutParams params = longClickdialog.getWindow().getAttributes();
+//				params.gravity = Gravity.BOTTOM;
+////				params.y =display.getHeight() -  location[1];//getHeight已废弃
+//				Point size = new Point();
+//				display.getSize(size);
+//				params.y = size.y - location[1];
+//				longClickdialog.getWindow().setAttributes(params);
+//				longClickdialog.setCanceledOnTouchOutside(true);
+//				longClickdialog.show();
+				if(deleteDrugById(drugList.get(position).getDrugId())){
+					drugList.remove(position);
+					drugNameList.remove(position);
+					drugListAdapter.notifyDataSetInvalidated();
+//					drugNameAdapter.notifyDataSetInvalidated();
+					((BaseAdapter)spinner_drugName_choice.getAdapter()).notifyDataSetChanged();
+				}
 				return true;
 			}
 		});
@@ -142,7 +152,7 @@ public class FragmentManage extends Fragment implements OnClickListener{
 		//此处应该是从数据库获取
 		drugList = new ArrayList<Drug>();
 		drugNameList = new ArrayList<String>();
-		drugCountList = new ArrayList<Integer>();
+		drugCountList = new ArrayList<Double>();
 		//从数据库读取
 		SQLiteDatabase db = MainActivity.dbHelper.getWritableDatabase();
 		Cursor cursor = db.query("drug", null, null, null, null, null, null);
@@ -159,26 +169,46 @@ public class FragmentManage extends Fragment implements OnClickListener{
 			}while(cursor.moveToNext());
 		}
 		cursor.close();
-//		Drug drug1 = new Drug("华法林钠片");
-//		drugNameList.add(drug1.getDrugName());
-//		Drug drug2 = new Drug("血栓心脉宁片");
-//		drugNameList.add(drug2.getDrugName());
-//		Drug drug3 = new Drug("阿司匹林肠溶片");
-//		drugNameList.add(drug3.getDrugName());
-//		Drug drug4 = new Drug("复方血栓通胶囊");
-//		drugNameList.add(drug4.getDrugName());
-//		drugList.add(drug4);
-//		drugList.add(drug3);
-//		drugList.add(drug2);
-//		drugList.add(drug1);
-		drugCountList.add(1);
-		drugCountList.add(2);
-		drugCountList.add(3);
-		drugCountList.add(4);
+//		if(drugList.size() == 0){
+//			Drug drug1 = new Drug("华法林钠片");
+//			drugNameList.add(drug1.getDrugName());
+//			Drug drug2 = new Drug("血栓心脉宁片");
+//			drugNameList.add(drug2.getDrugName());
+//			Drug drug3 = new Drug("阿司匹林肠溶片");
+//			drugNameList.add(drug3.getDrugName());
+//			Drug drug4 = new Drug("复方血栓通胶囊");
+//			drugNameList.add(drug4.getDrugName());
+//			drugList.add(drug4);
+//			drugList.add(drug3);
+//			drugList.add(drug2);
+//			drugList.add(drug1);
+//		}
+		
+//		db.execSQL("delete from drug");
+//		ContentValues values = new ContentValues();
+//		values.put("name", "华法林钠片");
+//		long count = db.insert("drug", null, values);
+//		values.clear();
+//		values.put("name", "血栓心脉宁片");
+//		db.insert("drug", null, values);
+//		values.clear();
+//		values.put("name", "阿司匹林肠溶片");
+//		db.insert("drug", null, values);
+//		values.clear();
+//		values.put("name", "复方血栓通胶囊");
+//		db.insert("drug", null, values);
+		
+		drugCountList.add(1d);
+		drugCountList.add(1.5d);
+		drugCountList.add(2d);
+		drugCountList.add(2.5);
+		drugCountList.add(3d);
+		drugCountList.add(3.5);
+		drugCountList.add(4d);
 		drugNameAdapter=new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item,drugNameList);
 		drugNameAdapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice); 
 		spinner_drugName_choice.setAdapter(drugNameAdapter);
-		drugCountAdapter = new ArrayAdapter<Integer>(this.getActivity(), android.R.layout.simple_spinner_item,drugCountList);
+		drugCountAdapter = new ArrayAdapter<Double>(this.getActivity(), android.R.layout.simple_spinner_item,drugCountList);
 		drugCountAdapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
 		spinner_drugCount_choice.setAdapter(drugCountAdapter);
 	}
@@ -193,6 +223,15 @@ public class FragmentManage extends Fragment implements OnClickListener{
 		btn_unit_li = (RadioButton)view.findViewById(R.id.btn_unit_li);
 		longClickdialog = new Dialog(getActivity(), R.style.MyDialogStyle);
 		longClickdialog.setContentView(R.layout.dialog_longclick);
+	}
+	
+	private boolean deleteDrugById(Integer id){
+		SQLiteDatabase db = MainActivity.dbHelper.getWritableDatabase();
+		int result = db.delete("drug", "id = ?", new String[] {id.toString()});
+		if(result > 0){
+			return true;
+		}
+		return false;
 	}
 	
 	@Override
@@ -210,7 +249,9 @@ public class FragmentManage extends Fragment implements OnClickListener{
 			}else{
 				values.put("name", tempName);
 				drugNameList.add(tempName);
-				drugNameAdapter.notifyDataSetChanged();
+				((BaseAdapter)spinner_drugName_choice.getAdapter()).notifyDataSetChanged();
+//				drugNameAdapter.notifyDataSetChanged();
+//				drugNameAdapter.notifyDataSetInvalidated();
 				tempDrug.setDrugName(tempName);
 			}
 			String tempDescri = addDrugDialog.et_drug_description.getText().toString().trim();
@@ -226,6 +267,10 @@ public class FragmentManage extends Fragment implements OnClickListener{
 			long count = db.insert("drug", null, values);
 			if(count > 0){
 				Toast.makeText(getActivity(), "add Success!", Toast.LENGTH_SHORT).show();
+				Cursor cursor = db.rawQuery("select last_insert_rowid() from drug", null);
+				if(cursor.moveToFirst()){
+					tempDrug.setDrugId(cursor.getInt(0));
+				}
 				drugList.add(tempDrug);
 				drugListAdapter.notifyDataSetInvalidated();
 			}
@@ -247,6 +292,17 @@ public class FragmentManage extends Fragment implements OnClickListener{
 			break;
 		case R.id.btn_add_drug_record:
 			Toast.makeText(getActivity(), "Add successful !!", Toast.LENGTH_SHORT).show();
+			break;
+		case R.id.tv_dialog_delete:
+			longClickdialog.dismiss();//然后将此对话框关闭
+			boolean result = deleteDrugById(drugList.get(longClickPosition).getDrugId());
+			if(result){
+				drugList.remove(longClickPosition);
+				drugNameList.remove(longClickPosition);
+				drugListAdapter.notifyDataSetInvalidated();
+//				drugNameAdapter.notifyDataSetInvalidated();
+				((BaseAdapter)spinner_drugName_choice.getAdapter()).notifyDataSetChanged();
+			}
 			break;
 		default:
 			break;

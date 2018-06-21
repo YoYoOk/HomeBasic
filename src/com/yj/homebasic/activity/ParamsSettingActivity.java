@@ -48,7 +48,7 @@ public class ParamsSettingActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_params_setting);
 		getActionBar().hide();//隐藏actionbar
 		init();// 将参数配置数据取出来
-		sp = getSharedPreferences("userInfo", Context.MODE_WORLD_READABLE);////查询是否有默认的蓝牙  去SharedPreference
+		sp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);////查询是否有默认的蓝牙  去SharedPreference
 		btn_confirm_set.setOnClickListener(this);
 	}
 
